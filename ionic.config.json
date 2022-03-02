@@ -1,0 +1,8 @@
+{
+  "name": "MoneyTracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "44db9334"
+}

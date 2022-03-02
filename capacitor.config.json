@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "MoneyTracker",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
