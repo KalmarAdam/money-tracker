@@ -1,32 +1,32 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Money Tracker</ion-title>
-      </ion-toolbar>
-      <ion-toolbar>
-      </ion-toolbar>
+    <ion-header class="background">
 
       <ion-toolbar class="summary-toolbar">
         <div class="wrapper">
           <div class="wrapper2">
             <div class="total">
-              <h6 class="total-title">Total</h6>
-              <h4 class="total-value">{{ total }}</h4>
+              <h6 class="total-title">Celková Hodnota</h6>
+              <div :style="total <= 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >
+              <h4  class="total-value" >{{ total }}</h4>
+              </div>
             </div>
           </div>
           <div class="wrapper3">
             <div class="income">
-              <h6 class="income-title">Income</h6>
+              <h6 class="income-title">Zárobky</h6>
               <h4 class="income-value">{{ totalIncome }}</h4>
             </div>
             <div class="outcome">
-              <h6 class="outcome-title">Outcome</h6>
+              <h6 class="outcome-title">Výdaje</h6>
               <h4 class="outcome-value">{{ totalOutcome }}</h4>
             </div>
           </div>
         </div>
       </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
 
       <ion-list>
         <ion-item lines="none" v-for="transaction in transactions" :key="transaction.id">
@@ -37,21 +37,17 @@
                 <p>{{ transaction.title }}</p>
               </div>
               <div class="list-item-amount">
-                <p :style="transaction.is_negative == 1 ? 'color: red' : 'color: green'" >{{transaction.is_negative == null ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}` }}€</p>
+                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >{{transaction.is_negative == null ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}` }}€</p>
               </div>
             </div>
           </ion-label>
         </ion-item>
       </ion-list>
 
-
-    </ion-header>
-
-    <ion-content>
-
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button router-link="/add">
-          <ion-icon :icon="arrowForwardCircleOutline"></ion-icon>
+
+          <ion-icon :icon="add" size="large" ></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
@@ -80,20 +76,20 @@ import {DateTime} from 'luxon';
 import MessageListItem from "@/components/MessageListItem.vue";
 import {defineComponent} from "vue";
 import {getMessages} from "@/data/messages";
-import {funnelOutline, arrowForwardCircleOutline} from "ionicons/icons";
+import {add,funnelOutline} from "ionicons/icons";
 
 
 export default defineComponent({
   name: "HomePage",
   data() {
     return {
-      funnelOutline,arrowForwardCircleOutline,
+      funnelOutline,add,
       transactions:[]
     };
   },
 
   ionViewWillEnter() {
-    axios.get('http://localhost:8888/moneytracker-be/api/v1/posts').then((response) => {
+    axios.get('http://moneytracker.sk/cms/api/v1/posts').then((response) => {
       this.transactions = response.data.data;
     })
   },
@@ -134,7 +130,6 @@ export default defineComponent({
     IonHeader,
     IonIcon,
     IonPage,
-    IonTitle,
     IonToolbar,
     IonLabel,
     IonFab,
@@ -157,7 +152,12 @@ export default defineComponent({
   justify-content: space-around;
   margin-bottom: 1rem;
 }
-
+.income-value{
+color: var( --ion-color-success)
+}
+.outcome-value{
+  color: var( --ion-color-danger)
+}
 .total-value {
 }
 
@@ -175,24 +175,24 @@ h6 {
   text-align: center;
 }
 
-ion-toolbar:not(.summary-toolbar) {
-  --background: white;
-}
 
 ion-toolbar.summary-toolbar {
-  --border-color: white;
+  --border-color: var(--ion-color-tertiary);
   border-radius: 1rem;
-  /*margin-left: 5px;*/
-  /*margin-right: 5px;*/
   margin-bottom: 1rem;
-  border-left: 5px white solid;
-  border-right: 5px white solid;
+  border-left: 5px solid var(--ion-color-tertiary);
+  border-right: 5px solid var(--ion-color-tertiary);
+  --background: var(--ion-color-secondary);
+  margin-top: 2rem;
+
+
 }
 
 .list-item-label {
   font-size: 15px;
   display:flex;
   justify-content: space-between;
+  color: var(--ion-color-tertiary-contrast);
 }
 
 .list-item-amount{
@@ -209,16 +209,27 @@ ion-toolbar.summary-toolbar {
 }
 
 ion-item{
-  background: #f7f7f7;
-  --background: #f7f7f7;
+  background: var(--ion-color-secondary);
+  --background: var(--ion-color-secondary);
   margin-bottom: 5px;
   margin-right: 5px;
   margin-left: 5px;
   border-radius: 1rem;
+  --color: var(--ion-color-tertiary);
+
 }
 
 ion-fab{
   margin-bottom: 3rem;
-  margin-right: 1rem;
 }
+
+ion-header.background{
+  background: var(--ion-color-tertiary);
+}
+
+ion-content{
+  --ion-background-color: var(--ion-color-tertiary);
+}
+
+
 </style>

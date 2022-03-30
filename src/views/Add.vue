@@ -8,13 +8,10 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-
+      <div class="content-wraper">
 
 <div class="wrapperadd">
       <ion-input placeholder="Cena" v-model="transaction.price"></ion-input>
-      <ion-input placeholder="Kategoria" v-model="transaction.category"></ion-input>
-
-
       <ion-input placeholder="Nazov" v-model="transaction.title"></ion-input>
 </div>
 
@@ -28,6 +25,7 @@
       </ion-segment>
 
       <ion-button class="done-button" expand="block" @click="submit">Hotovo</ion-button>
+    </div>
     </ion-content>
   </ion-page>
 </template>
@@ -57,14 +55,13 @@ export default {
       transaction: {
         price: '',
         title: '',
-        category: '',
         is_negative: '1'
       },
     }
   },
   methods: {
     submit(){
-      axios.post('http://localhost:8888/moneytracker-be/api/v1/posts', this.transaction).then((response) => {
+      axios.post('https://moneytracker.sk/cms/api/v1/posts', this.transaction).then((response) => {
         this.$router.push('/')
       })
     }
@@ -78,30 +75,52 @@ export default {
 
 
 .wrapperadd {
-  --background: #f7f7f7;
-  border-radius: 1rem;
+
   margin-bottom: 1rem;
-  border-left: 5px white solid;
-  border-right: 5px white solid;
   margin-top: 6rem;
 }
 
+.wrapperadd ion-input{
+  --background: var(--ion-color-secondary);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  --padding-start: 8px;
+  --padding-bottom: 20px;
+  --padding-top: 20px;
+  font-size: 15px;
+  height: 60px;
+
+}
+
 .done-button{
- margin-top: 215px;
-  border-left: 5px white solid;
-  border-right: 5px white solid;
+ margin-top: 1rem;
+  border-radius: 1rem;
+
+
 }
 
 ion-segment{
-  border-left: 5px white solid;
-  border-right: 5px white solid;
   height: 60px;
+  border-radius: 1rem;
+  --background: var(--ion-color-secondary);
 }
 
+ion-toolbar {
+  --background: var(--ion-color-tertiary);
+  --border-width: 0px !important;
+  margin-top: 10px;
+  margin-left: 10px;
+}
 ion-segment-button {
 
-  --background-checked: var(--ion-color-danger);
   --indicator-color: var(--ion-color-danger);
   color: black;
+  --border-radius: 1rem;
+}
+ion-content{
+  --ion-background-color: var(--ion-color-tertiary);
+}
+.content-wraper{
+  padding: 6px;
 }
 </style>
