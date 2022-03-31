@@ -1,7 +1,8 @@
 <template>
   <ion-page>
-    <ion-header class="background">
-
+    <ion-header>
+      <div class="background">
+        <div class="toolbar-margin">
       <ion-toolbar class="summary-toolbar">
         <div class="wrapper">
           <div class="wrapper2">
@@ -24,12 +25,14 @@
           </div>
         </div>
       </ion-toolbar>
+        </div>
+      </div>
     </ion-header>
 
     <ion-content>
 
       <ion-list>
-        <ion-item lines="none" v-for="transaction in transactions" :key="transaction.id">
+        <ion-item lines="none" v-for="transaction in reversedTransactions" :key="transaction.id">
           <ion-label>
             <div class="list-item-label">
               <div class="list-item-left">
@@ -89,7 +92,8 @@ export default defineComponent({
   },
 
   ionViewWillEnter() {
-    axios.get('http://moneytracker.sk/cms/api/v1/posts').then((response) => {
+    axios.get('https://moneytracker.sk/cms/api/v1/posts').then((response) => {
+      if(response.data.data)
       this.transactions = response.data.data;
     })
   },
@@ -102,6 +106,9 @@ export default defineComponent({
   },
 
   computed: {
+    reversedTransactions(){
+      return this.transactions.slice().reverse()
+    },
     total() {
       let total = 0
       this.transactions.forEach((transaction) => {
@@ -175,17 +182,14 @@ h6 {
   text-align: center;
 }
 
-
 ion-toolbar.summary-toolbar {
+
   --border-color: var(--ion-color-tertiary);
   border-radius: 1rem;
   margin-bottom: 1rem;
   border-left: 5px solid var(--ion-color-tertiary);
   border-right: 5px solid var(--ion-color-tertiary);
   --background: var(--ion-color-secondary);
-  margin-top: 2rem;
-
-
 }
 
 .list-item-label {
@@ -223,13 +227,15 @@ ion-fab{
   margin-bottom: 3rem;
 }
 
-ion-header.background{
+.background{
   background: var(--ion-color-tertiary);
 }
 
 ion-content{
   --ion-background-color: var(--ion-color-tertiary);
 }
-
+.toolbar-margin{
+  margin-top: 2rem;
+}
 
 </style>
