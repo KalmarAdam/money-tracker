@@ -36,11 +36,11 @@
           <ion-label>
             <div class="list-item-label">
               <div class="list-item-left">
-                <p>{{ formatDate(transaction.updated_at)}}</p>
+                <p>{{ formatDate(transaction.createdAt)}}</p>
                 <p>{{ transaction.title }}</p>
               </div>
               <div class="list-item-amount">
-                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >{{transaction.is_negative == null ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}` }}€</p>
+                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >{{transaction.is_negative == '0' ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}` }}€</p>
               </div>
             </div>
           </ion-label>
@@ -80,6 +80,8 @@ import MessageListItem from "@/components/MessageListItem.vue";
 import {defineComponent} from "vue";
 import {getMessages} from "@/data/messages";
 import {add,funnelOutline} from "ionicons/icons";
+import {db} from "@/main";
+import {collection, getDocs} from 'firebase/firestore'
 
 
 export default defineComponent({
@@ -91,17 +93,16 @@ export default defineComponent({
     };
   },
 
-  ionViewWillEnter() {
-    axios.get('https://moneytracker.sk/cms/api/v1/posts').then((response) => {
-      if(response.data.data)
-      this.transactions = response.data.data;
-    })
+  async ionViewWillEnter() {
+    this.transactions = []
+    const querySnapshot = await getDocs(collection(db, "transactions"));
+    querySnapshot.forEach(doc => this.transactions.push({...doc.data(), id: doc.id}))
+    console.log(this.transactions)
   },
 
   methods: {
     formatDate(date) {
-      console.log(date)
-      return DateTime.fromFormat(date, 'yyyy-MM-dd hh:mm:ss').toFormat('dd. MM. yyyy')
+      return DateTime.fromISO(date).toFormat('dd. MM. yyyy')
     }
   },
 
@@ -112,21 +113,21 @@ export default defineComponent({
     total() {
       let total = 0
       this.transactions.forEach((transaction) => {
-        transaction.is_negative == null ? total += +transaction.price : total -= +transaction.price
+        transaction.is_negative == '0' ? total += +transaction.price : total -= +transaction.price
       })
       return total.toFixed(2)
     },
     totalIncome() {
       let totalIncome = 0
       this.transactions.forEach((transaction) => {
-        if(transaction.is_negative == null ) totalIncome += +transaction.price
+        if(transaction.is_negative == '0' ) totalIncome += +transaction.price
       })
       return totalIncome.toFixed(2)
     },
     totalOutcome() {
       let totalOutcome = 0
       this.transactions.forEach((transaction) => {
-        if(transaction.is_negative != null) totalOutcome -= +transaction.price
+        if(transaction.is_negative != '0') totalOutcome -= +transaction.price
       })
       return totalOutcome.toFixed(2)
     }

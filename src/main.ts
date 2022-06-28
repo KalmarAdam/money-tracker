@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-
 import { IonicVue } from '@ionic/vue';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from 'firebase/firestore'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -20,14 +21,30 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
+
+
 /* Theme variables */
 import './theme/variables.css';
+
 
 const app = createApp(App)
   .use(IonicVue, {mode: 'ios'})
   .use(router)
 
-  
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBblM21GzpsaN4NPT-pOo-vAQYNTVywVYE",
+  authDomain: "moneytracker-be.firebaseapp.com",
+  projectId: "moneytracker-be",
+  storageBucket: "moneytracker-be.appspot.com",
+  messagingSenderId: "597865728977",
+  appId: "1:597865728977:web:9b7e0fa668e606e176eef0"
+};
+
+
+export const firebaseApp = initializeApp(firebaseConfig);
+export const db = getFirestore(firebaseApp);
+
 router.isReady().then(() => {
   app.mount('#app');
 });

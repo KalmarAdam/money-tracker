@@ -43,6 +43,10 @@ import {
   IonInput, IonSegmentButton, IonSegment, IonLabel
 } from "@ionic/vue";
 import axios from "axios";
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from "@/main";
+import {DateTime} from "luxon";
+
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -60,10 +64,12 @@ export default {
     }
   },
   methods: {
-    submit(){
-      axios.post('https://moneytracker.sk/cms/api/v1/posts', this.transaction).then((response) => {
-        this.$router.push('/')
-      })
+    async submit(){
+      await addDoc(collection(db, "transactions"), {
+        createdAt: DateTime.now().toISO(),
+        ...this.transaction,
+      });
+      await this.$router.push('/')
     }
   }
 }
