@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from '@ionic/vue-router';
 import { RouteRecordRaw} from 'vue-router';
+import {auth} from "@/main";
 
 
 
@@ -7,17 +8,39 @@ import { RouteRecordRaw} from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/login'
   },
   {
     path: '/home',
     name: 'Home',
-    component: () => import ('../views/HomePage.vue')
+    component: () => import ('../views/HomePage.vue'),
+    async beforeEnter(to, from) {
+      return !auth.currentUser ? '/login' : true
+    }
   },
   {
     path: '/add',
     name: 'Add',
-    component: () => import('@/views/Add.vue')
+    component: () => import('@/views/Add.vue'),
+    async beforeEnter(to, from) {
+      return !auth.currentUser ? '/login' : true
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'),
+    async beforeEnter(to, from) {
+      return auth.currentUser ? '/home' : true
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'),
+    async beforeEnter(to, from) {
+      return auth.currentUser ? '/home' : true
+    }
   },
 ]
 

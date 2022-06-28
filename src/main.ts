@@ -4,6 +4,8 @@ import router from './router';
 import { IonicVue } from '@ionic/vue';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore'
+import { initializeAuth, getAuth, browserLocalPersistence} from 'firebase/auth'
+import { createPinia } from 'pinia'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -30,6 +32,7 @@ import './theme/variables.css';
 const app = createApp(App)
   .use(IonicVue, {mode: 'ios'})
   .use(router)
+  .use(createPinia())
 
 
 const firebaseConfig = {
@@ -39,11 +42,26 @@ const firebaseConfig = {
   storageBucket: "moneytracker-be.appspot.com",
   messagingSenderId: "597865728977",
   appId: "1:597865728977:web:9b7e0fa668e606e176eef0"
-};
+}
+
+export const firebaseApp = initializeApp(firebaseConfig)
+export const db = getFirestore(firebaseApp)
+
+initializeAuth(firebaseApp,{
+  persistence: browserLocalPersistence
+})
+
+export const auth = getAuth(firebaseApp)
+
+auth.onAuthStateChanged(async function(user) {
+  if (user) {
+    await router.replace('/home')
+  } else {
+    await router.replace('/login')
+  }
+});
 
 
-export const firebaseApp = initializeApp(firebaseConfig);
-export const db = getFirestore(firebaseApp);
 
 router.isReady().then(() => {
   app.mount('#app');

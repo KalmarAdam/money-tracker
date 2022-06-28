@@ -46,6 +46,7 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <ion-button fill="outline" @click="logout()">Logout</ion-button>
 
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button router-link="/add">
@@ -72,7 +73,7 @@ import {
   IonIcon,
   IonLabel,
   IonFab,
-  IonItem,IonFabButton
+  IonItem,IonFabButton, IonButton
 } from "@ionic/vue";
 import axios from "axios";
 import {DateTime} from 'luxon';
@@ -80,8 +81,9 @@ import MessageListItem from "@/components/MessageListItem.vue";
 import {defineComponent} from "vue";
 import {getMessages} from "@/data/messages";
 import {add,funnelOutline} from "ionicons/icons";
-import {db} from "@/main";
-import {collection, getDocs} from 'firebase/firestore'
+import {auth, db} from "@/main";
+import {collection, getDocs, query, where} from 'firebase/firestore'
+import {signOut} from 'firebase/auth'
 
 
 export default defineComponent({
@@ -95,7 +97,7 @@ export default defineComponent({
 
   async ionViewWillEnter() {
     this.transactions = []
-    const querySnapshot = await getDocs(collection(db, "transactions"));
+    const querySnapshot = await getDocs(query(collection(db, "transactions"), where('userId', '==', auth.currentUser.uid)));
     querySnapshot.forEach(doc => this.transactions.push({...doc.data(), id: doc.id}))
     console.log(this.transactions)
   },
@@ -103,6 +105,10 @@ export default defineComponent({
   methods: {
     formatDate(date) {
       return DateTime.fromISO(date).toFormat('dd. MM. yyyy')
+    },
+    async logout() {
+      await signOut(auth)
+      this.$router.push('/login')
     }
   },
 
@@ -143,7 +149,7 @@ export default defineComponent({
     IonFab,
     IonFabButton,
     IonItem,
-    IonList,
+    IonList, IonButton
   },
 });
 </script>

@@ -44,12 +44,11 @@ import {
 } from "@ionic/vue";
 import axios from "axios";
 import { addDoc, collection } from 'firebase/firestore'
-import { db } from "@/main";
+import {auth, db} from "@/main";
 import {DateTime} from "luxon";
 
 
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
   name: "Add",
   components: {
     IonPage, IonHeader, IonContent, IonButton, IonToolbar,IonBackButton, IonButtons, IonInput, IonSegment, IonSegmentButton, IonLabel
@@ -67,8 +66,9 @@ export default {
     async submit(){
       await addDoc(collection(db, "transactions"), {
         createdAt: DateTime.now().toISO(),
+        userId: auth.currentUser.uid,
         ...this.transaction,
-      });
+      })
       await this.$router.push('/')
     }
   }
