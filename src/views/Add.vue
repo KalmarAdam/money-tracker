@@ -101,8 +101,6 @@ export default {
 .done-button{
  margin-top: 1rem;
   border-radius: 1rem;
-
-
 }
 
 ion-segment{

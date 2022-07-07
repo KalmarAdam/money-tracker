@@ -7,7 +7,7 @@
         <div class="wrapper">
           <div class="wrapper2">
             <div class="total">
-              <h6 class="total-title">Celková Hodnota</h6>
+              <h6 class="total-title">Total</h6>
               <div :style="total <= 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >
               <h4  class="total-value" >{{ total }}</h4>
               </div>
@@ -15,11 +15,11 @@
           </div>
           <div class="wrapper3">
             <div class="income">
-              <h6 class="income-title">Zárobky</h6>
+              <h6 class="income-title">Income</h6>
               <h4 class="income-value">{{ totalIncome }}</h4>
             </div>
             <div class="outcome">
-              <h6 class="outcome-title">Výdaje</h6>
+              <h6 class="outcome-title">Outcome</h6>
               <h4 class="outcome-value">{{ totalOutcome }}</h4>
             </div>
           </div>
