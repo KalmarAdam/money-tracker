@@ -38,6 +38,7 @@ import {auth} from "@/main";
 
 export default defineComponent({
   name: 'App',
+
   components: {
     IonApp,
     IonContent,

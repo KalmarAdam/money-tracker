@@ -42,7 +42,6 @@ import {
   IonButtons,
   IonInput, IonSegmentButton, IonSegment, IonLabel
 } from "@ionic/vue";
-import axios from "axios";
 import { addDoc, collection } from 'firebase/firestore'
 import {auth, db} from "@/main";
 import {DateTime} from "luxon";

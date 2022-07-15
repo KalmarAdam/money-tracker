@@ -1,15 +1,24 @@
 <template>
   <ion-page>
     <ion-header>
+
       <ion-toolbar>
         <ion-menu-button slot="start"></ion-menu-button>
+
+        <ion-segment @ionChange="segmentChanged($event)">
+          <ion-segment-button>
+            <ion-label>All</ion-label>
+          </ion-segment-button>
+          <ion-segment-button>
+            <ion-label>Categories</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
       </ion-toolbar>
+
       <div class="background">
         <div class="toolbar-margin">
       <ion-toolbar class="summary-toolbar">
-
-
-
         <div class="wrapper">
           <div class="wrapper2">
             <div class="total">
@@ -79,14 +88,14 @@ import {
   IonFab,
   IonItem,
   IonFabButton,
-  IonMenuButton
+  IonMenuButton, IonSegment, IonSegmentButton
 } from "@ionic/vue";
 import axios from "axios";
 import {DateTime} from 'luxon';
 import MessageListItem from "@/components/MessageListItem.vue";
 import {defineComponent} from "vue";
 import {getMessages} from "@/data/messages";
-import {add,funnelOutline} from "ionicons/icons";
+import {add,funnelOutline,} from "ionicons/icons";
 import {auth, db} from "@/main";
 import {collection, getDocs, query, where} from 'firebase/firestore'
 import {signOut} from 'firebase/auth'
@@ -156,7 +165,7 @@ export default defineComponent({
     IonFabButton,
     IonItem,
     IonList,
-    IonMenuButton
+    IonMenuButton, IonSegment, IonSegmentButton
   },
 });
 </script>
@@ -249,7 +258,8 @@ ion-content{
   --ion-background-color: var(--ion-color-tertiary);
 }
 .toolbar-margin{
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
+
 
 </style>

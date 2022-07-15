@@ -27,6 +27,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/categories',
+    name: 'Categories',
+    component: () => import('@/views/Categories.vue'),
+    async beforeEnter(to, from) {
+      return !auth.currentUser ? '/login' : true
+    }
+  },
+  {
     path: '/register',
     name: 'Register',
     component: () => import('@/views/Register.vue'),
