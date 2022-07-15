@@ -1,9 +1,15 @@
 <template>
   <ion-page>
     <ion-header>
+      <ion-toolbar>
+        <ion-menu-button slot="start"></ion-menu-button>
+      </ion-toolbar>
       <div class="background">
         <div class="toolbar-margin">
       <ion-toolbar class="summary-toolbar">
+
+
+
         <div class="wrapper">
           <div class="wrapper2">
             <div class="total">
@@ -46,8 +52,6 @@
           </ion-label>
         </ion-item>
       </ion-list>
-      <ion-button fill="outline" @click="logout()">Logout</ion-button>
-
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button router-link="/add">
 
@@ -73,7 +77,9 @@ import {
   IonIcon,
   IonLabel,
   IonFab,
-  IonItem,IonFabButton, IonButton
+  IonItem,
+  IonFabButton,
+  IonMenuButton
 } from "@ionic/vue";
 import axios from "axios";
 import {DateTime} from 'luxon';
@@ -149,7 +155,8 @@ export default defineComponent({
     IonFab,
     IonFabButton,
     IonItem,
-    IonList, IonButton
+    IonList,
+    IonMenuButton
   },
 });
 </script>

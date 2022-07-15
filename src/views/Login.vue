@@ -18,7 +18,7 @@
 <script>
 import {auth} from "@/main";
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import {IonButton, IonContent, IonInput, IonPage} from "@ionic/vue";
+import {IonButton, IonContent, IonInput, IonPage, IonItem} from "@ionic/vue";
 
 export default {
   data() {
@@ -28,7 +28,7 @@ export default {
     }
   },
   components: {
-    IonPage, IonContent, IonInput, IonButton
+    IonPage, IonContent, IonInput, IonButton, IonItem
   },
   methods: {
     async login() {
@@ -55,7 +55,7 @@ export default {
 }
 
 .center{
-  margin-top: 50%;
+  margin-top: 220px;
 }
 
 ion-input{

@@ -19,7 +19,7 @@
 <script>
 import {auth} from "@/main";
 import {createUserWithEmailAndPassword} from 'firebase/auth'
-import {IonPage, IonContent, IonInput, IonButton} from "@ionic/vue";
+import {IonPage, IonContent, IonInput, IonButton,IonItem} from "@ionic/vue";
 
 export default {
   data() {
@@ -29,7 +29,7 @@ export default {
     }
   },
   components: {
-    IonPage, IonContent, IonInput, IonButton
+    IonPage, IonContent, IonInput, IonButton,IonItem
   },
   methods: {
     async register() {
@@ -54,7 +54,7 @@ export default {
 }
 
 .center{
-  margin-top: 50%;
+  margin-top: 220px;
 }
 
 ion-input{
