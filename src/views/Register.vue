@@ -1,16 +1,23 @@
 <template>
   <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <h4>Register Page</h4>
+      </ion-toolbar>
+    </ion-header>
     <ion-content>
 
       <div class="center">
-        <ion-item lines="none"  class="login-input">
+        <ion-item lines="none" class="login-input">
           <ion-input placeholder="Enter your email" v-model="email"></ion-input>
         </ion-item>
         <ion-item lines="none" class="login-input">
           <ion-input placeholder="Enter your password" type="password" v-model="password"></ion-input>
         </ion-item>
         <ion-button class="login-button" expand="block" @click="register()">Register</ion-button>
-        <ion-button class="register-button" @click="$router.push('/login')" fill="outline">Or Login instead</ion-button>
+        <div class="register-button">
+          <ion-button @click="$router.push('/login')" fill="outline">Or Login instead</ion-button>
+        </div>
       </div>
     </ion-content>
   </ion-page>
@@ -19,7 +26,7 @@
 <script>
 import {auth} from "@/main";
 import {createUserWithEmailAndPassword} from 'firebase/auth'
-import {IonPage, IonContent, IonInput, IonButton,IonItem} from "@ionic/vue";
+import {IonPage, IonContent, IonInput, IonButton, IonItem} from "@ionic/vue";
 
 export default {
   data() {
@@ -29,7 +36,7 @@ export default {
     }
   },
   components: {
-    IonPage, IonContent, IonInput, IonButton,IonItem
+    IonPage, IonContent, IonInput, IonButton, IonItem
   },
   methods: {
     async register() {
@@ -42,7 +49,7 @@ export default {
 
 <style scoped>
 
-.login-input{
+.login-input {
   background: var(--ion-color-secondary);
   --background: var(--ion-color-secondary);
   margin-bottom: 15px;
@@ -53,25 +60,34 @@ export default {
 
 }
 
-.center{
+.center {
   margin-top: 220px;
 }
 
-ion-input{
+ion-input {
   text-align: left;
   margin-top: 15px;
 }
 
-.login-button{
+.login-button {
   border-radius: 1rem;
   margin-right: 5px;
   margin-left: 5px;
 }
 
-.register-button{
-  margin-left: 30%;
-  position: center;
-  margin-top: 15px;
+.register-button {
+  display: flex;
+  justify-content: center;
 }
 
+h4 {
+  color: var(--ion-color-danger);
+  display: flex;
+  justify-content: center;
+}
+
+ion-toolbar {
+  --border-style: none;
+  --background: var(--ion-color-tertiary);
+}
 </style>

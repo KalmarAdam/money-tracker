@@ -2,10 +2,9 @@
   <ion-page>
     <ion-header>
 
-      <ion-toolbar>
+      <ion-toolbar class="toolbar">
         <ion-menu-button slot="start"></ion-menu-button>
-
-        <ion-segment @ionChange="segmentChanged($event)">
+        <ion-segment class="segment" @ionChange="segmentChanged($event)">
           <ion-segment-button>
             <ion-label>All</ion-label>
           </ion-segment-button>
@@ -13,33 +12,32 @@
             <ion-label>Categories</ion-label>
           </ion-segment-button>
         </ion-segment>
-
       </ion-toolbar>
 
       <div class="background">
         <div class="toolbar-margin">
-      <ion-toolbar class="summary-toolbar">
-        <div class="wrapper">
-          <div class="wrapper2">
-            <div class="total">
-              <h6 class="total-title">Total</h6>
-              <div :style="total <= 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >
-              <h4  class="total-value" >{{ total }}</h4>
+          <ion-toolbar class="summary-toolbar">
+            <div class="wrapper">
+              <div class="wrapper2">
+                <div class="total">
+                  <h6 class="total-title">Total</h6>
+                  <div :style="total <= 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
+                    <h4 class="total-value">{{ total }}</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper3">
+                <div class="income">
+                  <h6 class="income-title">Income</h6>
+                  <h4 class="income-value">{{ totalIncome }}</h4>
+                </div>
+                <div class="outcome">
+                  <h6 class="outcome-title">Outcome</h6>
+                  <h4 class="outcome-value">{{ totalOutcome }}</h4>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="wrapper3">
-            <div class="income">
-              <h6 class="income-title">Income</h6>
-              <h4 class="income-value">{{ totalIncome }}</h4>
-            </div>
-            <div class="outcome">
-              <h6 class="outcome-title">Outcome</h6>
-              <h4 class="outcome-value">{{ totalOutcome }}</h4>
-            </div>
-          </div>
-        </div>
-      </ion-toolbar>
+          </ion-toolbar>
         </div>
       </div>
     </ion-header>
@@ -51,11 +49,14 @@
           <ion-label>
             <div class="list-item-label">
               <div class="list-item-left">
-                <p>{{ formatDate(transaction.createdAt)}}</p>
+                <p>{{ formatDate(transaction.createdAt) }}</p>
                 <p>{{ transaction.title }}</p>
               </div>
               <div class="list-item-amount">
-                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'" >{{transaction.is_negative == '0' ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}` }}€</p>
+                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
+                  {{
+                    transaction.is_negative == '0' ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}`
+                  }}€</p>
               </div>
             </div>
           </ion-label>
@@ -64,7 +65,7 @@
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button router-link="/add">
 
-          <ion-icon :icon="add" size="large" ></ion-icon>
+          <ion-icon :icon="add" size="large"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
@@ -95,7 +96,7 @@ import {DateTime} from 'luxon';
 import MessageListItem from "@/components/MessageListItem.vue";
 import {defineComponent} from "vue";
 import {getMessages} from "@/data/messages";
-import {add,funnelOutline,} from "ionicons/icons";
+import {add, funnelOutline,} from "ionicons/icons";
 import {auth, db} from "@/main";
 import {collection, getDocs, query, where} from 'firebase/firestore'
 import {signOut} from 'firebase/auth'
@@ -105,8 +106,8 @@ export default defineComponent({
   name: "HomePage",
   data() {
     return {
-      funnelOutline,add,
-      transactions:[]
+      funnelOutline, add,
+      transactions: []
     };
   },
 
@@ -128,7 +129,7 @@ export default defineComponent({
   },
 
   computed: {
-    reversedTransactions(){
+    reversedTransactions() {
       return this.transactions.slice().reverse()
     },
     total() {
@@ -141,14 +142,14 @@ export default defineComponent({
     totalIncome() {
       let totalIncome = 0
       this.transactions.forEach((transaction) => {
-        if(transaction.is_negative == '0' ) totalIncome += +transaction.price
+        if (transaction.is_negative == '0') totalIncome += +transaction.price
       })
       return totalIncome.toFixed(2)
     },
     totalOutcome() {
       let totalOutcome = 0
       this.transactions.forEach((transaction) => {
-        if(transaction.is_negative != '0') totalOutcome -= +transaction.price
+        if (transaction.is_negative != '0') totalOutcome -= +transaction.price
       })
       return totalOutcome.toFixed(2)
     }
@@ -182,12 +183,15 @@ export default defineComponent({
   justify-content: space-around;
   margin-bottom: 1rem;
 }
-.income-value{
-color: var( --ion-color-success)
+
+.income-value {
+  color: var(--ion-color-success)
 }
-.outcome-value{
-  color: var( --ion-color-danger)
+
+.outcome-value {
+  color: var(--ion-color-danger)
 }
+
 .total-value {
 }
 
@@ -217,12 +221,12 @@ ion-toolbar.summary-toolbar {
 
 .list-item-label {
   font-size: 15px;
-  display:flex;
+  display: flex;
   justify-content: space-between;
   color: var(--ion-color-tertiary-contrast);
 }
 
-.list-item-amount{
+.list-item-amount {
   display: flex;
   align-items: center;
 }
@@ -235,7 +239,7 @@ ion-toolbar.summary-toolbar {
   text-align: left;
 }
 
-ion-item{
+ion-item {
   background: var(--ion-color-secondary);
   --background: var(--ion-color-secondary);
   margin-bottom: 5px;
@@ -246,20 +250,29 @@ ion-item{
 
 }
 
-ion-fab{
+ion-fab {
   margin-bottom: 3rem;
 }
 
-.background{
+.background {
   background: var(--ion-color-tertiary);
 }
 
-ion-content{
+ion-content {
   --ion-background-color: var(--ion-color-tertiary);
 }
-.toolbar-margin{
+
+.toolbar-margin {
   margin-top: 1rem;
 }
 
+.segment {
+  right: 16px;
+}
+
+ion-toolbar {
+  --border-style: none;
+  --background: var(--ion-color-tertiary);
+}
 
 </style>
