@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page ref="ionPage">
     <ion-header>
 
       <ion-toolbar class="toolbar">
@@ -44,6 +44,7 @@
 
     <ion-content>
 
+      <div class="listMargin">
       <ion-list>
         <ion-item lines="none" v-for="transaction in reversedTransactions" :key="transaction.id">
           <ion-label>
@@ -62,8 +63,9 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      </div>
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-        <ion-fab-button router-link="/add">
+        <ion-fab-button @click="openAddModal">
 
           <ion-icon :icon="add" size="large"></ion-icon>
         </ion-fab-button>
@@ -89,7 +91,7 @@ import {
   IonFab,
   IonItem,
   IonFabButton,
-  IonMenuButton, IonSegment, IonSegmentButton
+  IonMenuButton, IonSegment, IonSegmentButton, modalController
 } from "@ionic/vue";
 import axios from "axios";
 import {DateTime} from 'luxon';
@@ -100,6 +102,8 @@ import {add, funnelOutline,} from "ionicons/icons";
 import {auth, db} from "@/main";
 import {collection, getDocs, query, where} from 'firebase/firestore'
 import {signOut} from 'firebase/auth'
+import { menuController } from "@ionic/core";
+import Add from "@/views/Add";
 
 
 export default defineComponent({
@@ -125,8 +129,17 @@ export default defineComponent({
     async logout() {
       await signOut(auth)
       this.$router.push('/login')
-    }
+    },
+    async openAddModal() {
+      const modal = await modalController.create({
+        component: Add,
+        swipeToClose: true,
+        presentingElement: this.$refs.ionPage.$el,
+      })
+      await modal.present()
+      },
   },
+
 
   computed: {
     reversedTransactions() {
@@ -168,10 +181,13 @@ export default defineComponent({
     IonList,
     IonMenuButton, IonSegment, IonSegmentButton
   },
+
+
 });
 </script>
 
 <style scoped>
+
 .wrapper2 {
   display: flex;
   justify-content: center;
@@ -213,7 +229,7 @@ ion-toolbar.summary-toolbar {
 
   --border-color: var(--ion-color-tertiary);
   border-radius: 1rem;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-left: 5px solid var(--ion-color-tertiary);
   border-right: 5px solid var(--ion-color-tertiary);
   --background: var(--ion-color-secondary);
@@ -260,10 +276,11 @@ ion-fab {
 
 ion-content {
   --ion-background-color: var(--ion-color-tertiary);
+  padding-top: 1rem;
 }
 
 .toolbar-margin {
-  margin-top: 1rem;
+  padding-top: 1rem;
 }
 
 .segment {
@@ -273,6 +290,10 @@ ion-content {
 ion-toolbar {
   --border-style: none;
   --background: var(--ion-color-tertiary);
+}
+
+.listMargin{
+  margin-top: 1rem;
 }
 
 </style>

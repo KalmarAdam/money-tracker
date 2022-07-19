@@ -26,26 +26,27 @@
 <script>
 import {auth} from "@/main";
 import {signInWithEmailAndPassword} from 'firebase/auth'
-import {IonButton, IonContent, IonInput, IonPage, IonItem} from "@ionic/vue";
+import {IonButton, IonContent, IonInput, IonPage, IonItem, IonToolbar, IonHeader} from "@ionic/vue";
 
 export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      errorMsg: '',
     }
   },
   components: {
-    IonPage, IonContent, IonInput, IonButton, IonItem
+    IonPage, IonContent, IonInput, IonButton, IonItem, IonToolbar, IonHeader
   },
   methods: {
     async login() {
       await signInWithEmailAndPassword(auth, this.email, this.password)
       await this.$router.push('/home')
     }
-  }
-}
+  },
 
+}
 
 </script>
 

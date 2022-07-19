@@ -26,7 +26,7 @@
 <script>
 import {auth} from "@/main";
 import {createUserWithEmailAndPassword} from 'firebase/auth'
-import {IonPage, IonContent, IonInput, IonButton, IonItem} from "@ionic/vue";
+import {IonPage, IonContent, IonInput, IonButton, IonItem, IonHeader, IonToolbar} from "@ionic/vue";
 
 export default {
   data() {
@@ -36,7 +36,7 @@ export default {
     }
   },
   components: {
-    IonPage, IonContent, IonInput, IonButton, IonItem
+    IonPage, IonContent, IonInput, IonButton, IonItem, IonHeader, IonToolbar,
   },
   methods: {
     async register() {

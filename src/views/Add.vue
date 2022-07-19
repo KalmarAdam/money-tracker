@@ -1,10 +1,7 @@
 <template>
-  <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
+         <ion-title>Add</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -24,10 +21,9 @@
         </ion-segment-button>
       </ion-segment>
 
-      <ion-button class="done-button" expand="block" @click="submit">Hotovo</ion-button>
+      <ion-button class="done-button" expand="block" @click="submit()">Hotovo</ion-button>
     </div>
     </ion-content>
-  </ion-page>
 </template>
 
 <script>
@@ -35,12 +31,8 @@ import {
   IonButton,
   IonContent,
   IonHeader,
-  IonPage,
-  IonTitle,
   IonToolbar,
-  IonBackButton,
-  IonButtons,
-  IonInput, IonSegmentButton, IonSegment, IonLabel
+  IonInput, IonSegmentButton, IonSegment, IonLabel, IonTitle, modalController,
 } from "@ionic/vue";
 import { addDoc, collection } from 'firebase/firestore'
 import {auth, db} from "@/main";
@@ -50,7 +42,7 @@ import {DateTime} from "luxon";
 export default {
   name: "Add",
   components: {
-    IonPage, IonHeader, IonContent, IonButton, IonToolbar,IonBackButton, IonButtons, IonInput, IonSegment, IonSegmentButton, IonLabel
+    IonHeader, IonContent, IonButton, IonToolbar, IonInput, IonSegment, IonSegmentButton, IonLabel, IonTitle,
   },
   data() {
     return {
@@ -68,8 +60,9 @@ export default {
         userId: auth.currentUser.uid,
         ...this.transaction,
       })
-      await this.$router.push('/')
-    }
+      await modalController.dismiss()
+    },
+
   }
 }
 
@@ -108,12 +101,6 @@ ion-segment{
   --background: var(--ion-color-secondary);
 }
 
-ion-toolbar {
-  --background: var(--ion-color-tertiary);
-  --border-width: 0px !important;
-  margin-top: 10px;
-  margin-left: 10px;
-}
 ion-segment-button {
 
   --indicator-color: var(--ion-color-danger);
