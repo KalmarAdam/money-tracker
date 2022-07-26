@@ -9,7 +9,9 @@
       </ion-header>
       <ion-content>
         <ion-list>
-          <ion-button expand="block" fill="outline" @click="logout(); reloadPage();" >Logout</ion-button>
+          <ion-button class="ion-margin" expand="block" fill="outline" @click="logout(); reloadPage();">
+            Logout
+          </ion-button>
         </ion-list>
       </ion-content>
     </ion-menu>
@@ -31,11 +33,12 @@ import {
   IonButton,
 
 } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import {DateTime} from "luxon";
 import {signOut} from "firebase/auth";
 import {auth} from "@/main";
-import { menuController } from "@ionic/core";
+import {menuController} from "@ionic/core";
+
 export default defineComponent({
   name: 'App',
 

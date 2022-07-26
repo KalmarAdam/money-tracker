@@ -1,19 +1,28 @@
 <template>
-    <ion-header>
-      <ion-toolbar>
-         <ion-title>Add</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <div class="content-wraper">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Add</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="content-wraper">
 
-<div class="wrapperadd">
-      <ion-input placeholder="Cena" v-model="transaction.price"></ion-input>
-      <ion-input placeholder="Nazov" v-model="transaction.title"></ion-input>
-</div>
+      <div class="wrapperadd">
+        <ion-input placeholder="Price" v-model="transaction.price"></ion-input>
+        <ion-input placeholder="Name" v-model="transaction.title"></ion-input>
+      </div>
 
-      <ion-segment v-model="transaction.is_negative" :value="transaction.is_negative" >
-        <ion-segment-button  :value="0">
+      <ion-select interface="popover" placeholder="Select Category" v-model="transaction.category">
+        <ion-select-option
+            v-for="categoryOption in categories"
+            :key="categoryOption.toLowerCase()"
+            :value="categoryOption.toLowerCase()">
+          {{ categoryOption }}
+        </ion-select-option>
+      </ion-select>
+
+      <ion-segment v-model="transaction.is_negative" :value="transaction.is_negative">
+        <ion-segment-button :value="0">
           <ion-label>+</ion-label>
         </ion-segment-button>
         <ion-segment-button :value="1">
@@ -21,9 +30,9 @@
         </ion-segment-button>
       </ion-segment>
 
-      <ion-button class="done-button" expand="block" @click="submit()">Hotovo</ion-button>
+      <ion-button class="done-button" expand="block" @click="submit()">Done</ion-button>
     </div>
-    </ion-content>
+  </ion-content>
 </template>
 
 <script>
@@ -33,8 +42,9 @@ import {
   IonHeader,
   IonToolbar,
   IonInput, IonSegmentButton, IonSegment, IonLabel, IonTitle, modalController,
+  IonSelect, IonSelectOption
 } from "@ionic/vue";
-import { addDoc, collection } from 'firebase/firestore'
+import {addDoc, collection} from 'firebase/firestore'
 import {auth, db} from "@/main";
 import {DateTime} from "luxon";
 
@@ -42,21 +52,42 @@ import {DateTime} from "luxon";
 export default {
   name: "Add",
   components: {
-    IonHeader, IonContent, IonButton, IonToolbar, IonInput, IonSegment, IonSegmentButton, IonLabel, IonTitle,
+    IonHeader,
+    IonContent,
+    IonButton,
+    IonToolbar,
+    IonInput,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+    IonTitle,
+    IonSelect,
+    IonSelectOption
   },
   data() {
     return {
       transaction: {
         price: '',
         title: '',
-        is_negative: '1'
+        is_negative: '1',
+        category: '',
       },
+      categories: [
+        'Práca',
+        'Supermarket',
+        'Reštaurácie',
+        'Cestovanie',
+        'Oblečenie',
+        'Domácnosť',
+        'Zvieratá',
+        'Zábava',
+      ]
     }
   },
   methods: {
-    async submit(){
+    async submit() {
       await addDoc(collection(db, "transactions"), {
-        createdAt: DateTime.now().toISO(),
+        createdAt: DateTime.now().toMillis(),
         userId: auth.currentUser.uid,
         ...this.transaction,
       })
@@ -78,7 +109,7 @@ export default {
   margin-top: 6rem;
 }
 
-.wrapperadd ion-input{
+.wrapperadd ion-input {
   --background: var(--ion-color-secondary);
   border-radius: 1rem;
   margin-bottom: 1rem;
@@ -90,12 +121,12 @@ export default {
 
 }
 
-.done-button{
- margin-top: 1rem;
+.done-button {
+  margin-top: 1rem;
   border-radius: 1rem;
 }
 
-ion-segment{
+ion-segment {
   height: 60px;
   border-radius: 1rem;
   --background: var(--ion-color-secondary);
@@ -107,10 +138,12 @@ ion-segment-button {
   color: black;
   --border-radius: 1rem;
 }
-ion-content{
+
+ion-content {
   --ion-background-color: var(--ion-color-tertiary);
 }
-.content-wraper{
+
+.content-wraper {
   padding: 6px;
 }
 </style>

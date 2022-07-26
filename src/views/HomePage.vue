@@ -1,17 +1,19 @@
 <template>
   <ion-page ref="ionPage">
+
     <ion-header>
 
       <ion-toolbar class="toolbar">
         <ion-menu-button slot="start"></ion-menu-button>
-        <ion-segment class="segment" @ionChange="segmentChanged($event)">
-          <ion-segment-button>
+        <ion-segment class="segment" v-model="activeSegment">
+          <ion-segment-button value="all">
             <ion-label>All</ion-label>
           </ion-segment-button>
-          <ion-segment-button>
+          <ion-segment-button value="categories">
             <ion-label>Categories</ion-label>
           </ion-segment-button>
         </ion-segment>
+
       </ion-toolbar>
 
       <div class="background">
@@ -45,24 +47,40 @@
     <ion-content>
 
       <div class="listMargin">
-      <ion-list>
-        <ion-item lines="none" v-for="transaction in reversedTransactions" :key="transaction.id">
-          <ion-label>
-            <div class="list-item-label">
-              <div class="list-item-left">
-                <p>{{ formatDate(transaction.createdAt) }}</p>
-                <p>{{ transaction.title }}</p>
+        <ion-list v-if="activeSegment === 'all' ">
+          <ion-item lines="none" v-for="transaction in sortedTransactions" :key="transaction.id">
+            <ion-label>
+              <div class="list-item-label">
+                <div class="list-item-left">
+                  <p>{{ formatDate(transaction.createdAt) }}</p>
+                  <p>{{ transaction.title }}</p>
+                </div>
+                <div class="list-item-amount">
+                  <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
+                    {{
+                      transaction.is_negative == '0' ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}`
+                    }}€</p>
+                </div>
               </div>
-              <div class="list-item-amount">
-                <p :style="transaction.is_negative == 1 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
-                  {{
-                    transaction.is_negative == '0' ? `+${parseFloat(transaction.price).toFixed(2)}` : `-${parseFloat(transaction.price).toFixed(2)}`
-                  }}€</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-list v-else>
+          <ion-item lines="none" v-for="(value, key) in categories" :key="key">
+            <ion-label>
+              <div class="list-item-label">
+                <div class="list-item-left">
+                  <p>{{ key }}</p>
+                </div>
+                <div class="list-item-amount">
+                  <p :style="value < 0 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
+                    {{ parseFloat(value).toFixed(2) }}€</p>
+                </div>
               </div>
-            </div>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </div>
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button @click="openAddModal">
@@ -72,6 +90,7 @@
       </ion-fab>
 
     </ion-content>
+
   </ion-page>
 </template>
 
@@ -102,7 +121,7 @@ import {add, funnelOutline,} from "ionicons/icons";
 import {auth, db} from "@/main";
 import {collection, getDocs, query, where} from 'firebase/firestore'
 import {signOut} from 'firebase/auth'
-import { menuController } from "@ionic/core";
+import {menuController} from "@ionic/core";
 import Add from "@/views/Add";
 
 
@@ -111,20 +130,20 @@ export default defineComponent({
   data() {
     return {
       funnelOutline, add,
+      activeSegment: 'all',
       transactions: []
     };
   },
 
   async ionViewWillEnter() {
-    this.transactions = []
     const querySnapshot = await getDocs(query(collection(db, "transactions"), where('userId', '==', auth.currentUser.uid)));
+    this.transactions = []
     querySnapshot.forEach(doc => this.transactions.push({...doc.data(), id: doc.id}))
     console.log(this.transactions)
   },
-
   methods: {
     formatDate(date) {
-      return DateTime.fromISO(date).toFormat('dd. MM. yyyy')
+      return DateTime.fromMillis(date).toFormat('dd. MM. yyyy')
     },
     async logout() {
       await signOut(auth)
@@ -137,13 +156,19 @@ export default defineComponent({
         presentingElement: this.$refs.ionPage.$el,
       })
       await modal.present()
-      },
+      modal.onWillDismiss().then(async () => {
+        const querySnapshot = await getDocs(query(collection(db, "transactions"), where('userId', '==', auth.currentUser.uid)));
+        this.transactions = []
+        querySnapshot.forEach(doc => this.transactions.push({...doc.data(), id: doc.id}))
+        console.log(this.transactions)
+      })
+    }
   },
 
 
   computed: {
-    reversedTransactions() {
-      return this.transactions.slice().reverse()
+    sortedTransactions() {
+      return this.transactions.slice().sort((a, b) => b.createdAt - a.createdAt)
     },
     total() {
       let total = 0
@@ -165,8 +190,22 @@ export default defineComponent({
         if (transaction.is_negative != '0') totalOutcome -= +transaction.price
       })
       return totalOutcome.toFixed(2)
+    },
+
+    // for loop ktory zbehne zakazdym ked sa vykona nejaka zmena v transakciach... ak najde zapisanu kategoriu pripocita jej price k celkovej hodnote
+    categories() {
+      const categories = {}
+      this.transactions.forEach(transaction => {
+        if (!categories[transaction.category]) {
+          categories[transaction.category] = transaction.is_negative != '0' ? -transaction.price : +transaction.price
+        } else {
+          categories[transaction.category] += transaction.is_negative != '0' ? -transaction.price : +transaction.price
+        }
+      })
+      return categories
     }
   },
+
 
   components: {
     IonContent,
@@ -292,7 +331,7 @@ ion-toolbar {
   --background: var(--ion-color-tertiary);
 }
 
-.listMargin{
+.listMargin {
   margin-top: 1rem;
 }
 
