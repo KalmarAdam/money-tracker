@@ -9,7 +9,7 @@
       </ion-header>
       <ion-content>
         <ion-list>
-          <ion-button class="ion-margin" expand="block" fill="outline" @click="logout(); reloadPage();">
+          <ion-button class="ion-margin" expand="block" fill="outline" @click="logout()">
             Logout
           </ion-button>
         </ion-list>
@@ -58,8 +58,7 @@ export default defineComponent({
     async logout() {
       await signOut(auth)
       this.$router.push('/login')
-    },
-    reloadPage() {
+
       window.location.reload();
     },
   },

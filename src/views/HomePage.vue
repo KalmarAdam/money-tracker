@@ -48,7 +48,7 @@
 
       <div class="listMargin">
         <ion-list v-if="activeSegment === 'all' ">
-          <ion-item lines="none" v-for="transaction in sortedTransactions" :key="transaction.id">
+          <ion-item class="item-all-style" lines="none" v-for="transaction in sortedTransactions" :key="transaction.id">
             <ion-label>
               <div class="list-item-label">
                 <div class="list-item-left">
@@ -67,11 +67,11 @@
         </ion-list>
 
         <ion-list v-else>
-          <ion-item lines="none" v-for="(value, key) in categories" :key="key">
+          <ion-item class="item-categories" lines="none" v-for="(value, key) in categories" :key="key">
             <ion-label>
               <div class="list-item-label">
-                <div class="list-item-left">
-                  <p>{{ key }}</p>
+                <div class="list-item-amount ion-padding-vertical">
+                  <p class="title-cat">{{ key }}</p>
                 </div>
                 <div class="list-item-amount">
                   <p :style="value < 0 ? 'color: var( --ion-color-danger)' : 'color: var( --ion-color-success)'">
@@ -82,6 +82,7 @@
           </ion-item>
         </ion-list>
       </div>
+
       <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button @click="openAddModal">
 
@@ -165,7 +166,7 @@ export default defineComponent({
     }
   },
 
-
+// premenna ktora sa aktualizuje vzdy ked sa nejake data v nej zmenia
   computed: {
     sortedTransactions() {
       return this.transactions.slice().sort((a, b) => b.createdAt - a.createdAt)
@@ -218,7 +219,9 @@ export default defineComponent({
     IonFabButton,
     IonItem,
     IonList,
-    IonMenuButton, IonSegment, IonSegmentButton
+    IonMenuButton,
+    IonSegment,
+    IonSegmentButton
   },
 
 
@@ -294,16 +297,16 @@ ion-toolbar.summary-toolbar {
   text-align: left;
 }
 
-ion-item {
-  background: var(--ion-color-secondary);
-  --background: var(--ion-color-secondary);
-  margin-bottom: 5px;
-  margin-right: 5px;
-  margin-left: 5px;
-  border-radius: 1rem;
-  --color: var(--ion-color-tertiary);
+/*ion-item {*/
+/*  background: var(--ion-color-secondary);*/
+/*  --background: var(--ion-color-secondary);*/
+/*  margin-bottom: 5px;*/
+/*  margin-right: 5px;*/
+/*  margin-left: 5px;*/
+/*  border-radius: 1rem;*/
+/*  --color: var(--ion-color-tertiary);*/
 
-}
+/*}*/
 
 ion-fab {
   margin-bottom: 3rem;
@@ -333,6 +336,31 @@ ion-toolbar {
 
 .listMargin {
   margin-top: 1rem;
+}
+
+.item-all-style {
+  background: var(--ion-color-secondary);
+  --background: var(--ion-color-secondary);
+  margin-bottom: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  border-radius: 1rem;
+  --color: var(--ion-color-tertiary);
+}
+
+.item-categories {
+  background: var(--ion-color-secondary);
+  --background: var(--ion-color-secondary);
+  --color: var(--ion-color-tertiary);
+  margin-bottom: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  border-radius: 1rem;
+}
+
+.title-cat {
+  display: flex;
+  justify-content: center;
 }
 
 </style>

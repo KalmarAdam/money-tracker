@@ -13,6 +13,7 @@
       </div>
 
       <ion-select interface="popover" placeholder="Select Category" v-model="transaction.category">
+        <!-- for loop na vsetky options, v UI sa zobrazi s velkym pismenom a do db sa ulozi s malym -->
         <ion-select-option
             v-for="categoryOption in categories"
             :key="categoryOption.toLowerCase()"
@@ -21,11 +22,11 @@
         </ion-select-option>
       </ion-select>
 
-      <ion-segment v-model="transaction.is_negative" :value="transaction.is_negative">
-        <ion-segment-button :value="0">
+      <ion-segment v-model="transaction.is_negative">
+        <ion-segment-button value="0">
           <ion-label>+</ion-label>
         </ion-segment-button>
-        <ion-segment-button :value="1">
+        <ion-segment-button value="1">
           <ion-label>-</ion-label>
         </ion-segment-button>
       </ion-segment>
@@ -93,7 +94,6 @@ export default {
       })
       await modalController.dismiss()
     },
-
   }
 }
 
